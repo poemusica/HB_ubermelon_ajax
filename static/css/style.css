@@ -71,5 +71,8 @@ div.cart {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
+
 img.melon-cart {
+    height: 15px;
 }
+

@@ -79,7 +79,9 @@ def show_cart():
     total = sum([melon[0].price * melon[1] for melon in melons])
     return render_template("_cart_items.html", melons = melons, total=total)
 
-
+@app.route("/increase")
+def increase_qty():
+    return redirect("/cart")
 
 if __name__ == "__main__":
     app.run(debug=True)

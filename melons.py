@@ -72,5 +72,14 @@ def checkout():
     flash("Sorry! Checkout will be implemented in a future version of ubermelon.")
     return redirect("/melons")
 
+@app.route("/cart_items")
+def show_cart():
+
+    melons = [ (model.get_melon_by_id(int(id)), count) for id, count in session.setdefault("cart", {}).items() ]
+    total = sum([melon[0].price * melon[1] for melon in melons])
+    return render_template("_cart_items.html", melons = melons, total=total)
+
+
+
 if __name__ == "__main__":
     app.run(debug=True)

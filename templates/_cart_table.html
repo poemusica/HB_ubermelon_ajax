@@ -1,0 +1,17 @@
+<table class="table table-striped">
+    <tr><th>Melon Name</th><th>Quantity</th><th>Price</th><th>Total</th></tr>
+    {% for melon, qty in melons %}
+    <tr><div id="row-target">
+        <td>{{ melon.common_name }}</td>
+        <td><div>
+                <a href= "" class="btn btn-danger btn-xs decrease-btn">-</a>
+                    <span id="melon-qty-{{melon.id}}" data-melon-id="{{ melon.id }}">{{ qty }}</span>
+                <a href="" class="btn btn-primary btn-xs increase-btn">+</a>
+            </div>
+        </td>
+        <td>{{ melon.price_str() }}</td>
+        <td>{{ "$%.2f"%(melon.price * qty) }}</td>
+    </div></tr>
+    {% endfor %}
+</table>
+<div id="sale-total"><h3>Total: ${{"%.2f"%total}}</h3></div>

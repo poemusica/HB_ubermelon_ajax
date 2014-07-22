@@ -27,14 +27,20 @@ def show_melon(id):
     return render_template("melon_details.html",
                   display_melon = melon)
 
+def create_cart_table():
+    melons = [ (model.get_melon_by_id(int(id)), count) for id, count in session.setdefault("cart", {}).items() ]
+    total = sum([melon[0].price * melon[1] for melon in melons])
+    return render_template("_cart_table.html", melons = melons, total=total)
+
+
 @app.route("/cart")
 def shopping_cart():
     """TODO: Display the contents of the shopping cart. The shopping cart is a
     list held in the session that contains all the melons to be added. Check
     accompanying screenshots for details."""
-    melons = [ (model.get_melon_by_id(int(id)), count) for id, count in session.setdefault("cart", {}).items() ]
-    total = sum([melon[0].price * melon[1] for melon in melons])
-    return render_template("cart.html", melons = melons, total=total)
+    cart_table_html = create_cart_table()
+    return render_template("cart.html", mycart = cart_table_html)
+
     
 @app.route("/add_to_cart/<int:id>")
 def add_to_cart(id):
@@ -51,6 +57,7 @@ def add_to_cart(id):
 
     flash("Successfully added to cart")
     return redirect("/melon/%d"%id)
+
 
 
 @app.route("/login", methods=["GET"])
@@ -79,9 +86,28 @@ def show_cart():
     total = sum([melon[0].price * melon[1] for melon in melons])
     return render_template("_cart_items.html", melons = melons, total=total)
 
-@app.route("/increase")
-def increase_qty():
-    return redirect("/cart")
+@app.route("/increase/<id>")
+def increase_qty(id):
+    cart = session.setdefault("cart", {})
+    cart[id] = cart.get(id, 0) + 1
+    print cart
+    return create_cart_table()
+    #mystr = "%s,%s" % (id, str(cart[id]) )
+    #print cart, mystr
+    #return mystr
+
+@app.route("/decrease/<id>")
+def decrease_qty(id):
+    cart = session.setdefault("cart", {})
+    qty = cart.get(id, 0)
+    if qty <= 0:
+        cart[id] = 0
+    else:
+        cart[id] -= 1
+    mystr = "%s,%s" % (id, str(cart[id]) )
+    print cart, mystr
+    return mystr
+
 
 if __name__ == "__main__":
     app.run(debug=True)
